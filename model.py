@@ -46,9 +46,13 @@ class Actor(nn.Module):
         
     def forward(self, state):
         """Forward pass, this function outputs the action chosen by model."""
+        """
         x = self.bn0(state)
         x = F.relu(self.bn1(self.fc1(x)))
-        x = F.relu(self.bn2(self.fc2(x)))        
+        x = F.relu(self.bn2(self.fc2(x)))      
+        """
+        x = F.relu(self.fc1(state))
+        x = F.relu(self.fc2(x))
         return F.tanh(self.fc3(x))
     
     
@@ -85,7 +89,13 @@ class Critic(nn.Module):
         
     def forward(self, state, action):
         """Forward pass, this function outputs the Q value of chosen action."""
+        """
         state = self.bn0(state)
+        xs = F.relu(self.fc1(state))
+        x = torch.cat((xs, action), dim=1)
+        x = F.relu(self.fc2(x))
+        """
+        
         xs = F.relu(self.fc1(state))
         x = torch.cat((xs, action), dim=1)
         x = F.relu(self.fc2(x))
