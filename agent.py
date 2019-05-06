@@ -25,9 +25,9 @@ LR_CRITIC = 1e-3
 # L2 weight decay
 WEIGHT_DECAY = 0
 # Number of time steps before each update
-UPDATE_EVERY = 20
+UPDATE_EVERY = 2
 # Number of updates in each update
-NUM_UPDATE = 10
+NUM_UPDATE = 4
 # Epsilon for the noise process added to the actions
 EPSILON = 1
 # Epsilon decay rate
@@ -100,10 +100,17 @@ class Agent():
     def act(self, state, add_noise=True):
         """Returns actions for given state as per current policy."""
         state = torch.from_numpy(state).float().to(device)
+        action = np.zeros((self.n_agents, self.action_size))
         # Put model in evaluating mode
         self.actor_local.eval()
+        #with torch.no_grad():
+            #action = self.actor_local(state).cpu().data.numpy()
+            
+            
         with torch.no_grad():
-            action = self.actor_local(state).cpu().data.numpy()
+            for i in range(self.n_agents):
+                action_i = self.actor_local(state[i]).cpu().data.numpy()
+                action[i, :] = action_i            
         # Put model back in training mode
         self.actor_local.train()
         # Add noise
@@ -189,7 +196,7 @@ class Agent():
 class OUNoise():
     """Ornstein-Uhlenbeck noise process."""
     
-    def __init__(self, size, seed, mu=0.0, theta=0.15, sigma=0.05):
+    def __init__(self, size, seed, mu=0.0, theta=0.15, sigma=1):
         """Initialize parameters and nose process."""
         self.size = size
         self.mu = mu * np.ones(size)
