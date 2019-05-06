@@ -43,8 +43,8 @@ CRITIC_FC2 = 256
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-class Agent():
-    """A class to create agents that interact and learn from the enviroment."""
+class DDPGAgent():
+    """A class to create DDPG agents that interact and learn from the enviroment."""
     
     def __init__(self, state_size, action_size, n_agents, seed):
         """Initilize the Agent.
