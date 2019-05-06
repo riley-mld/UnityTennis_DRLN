@@ -4,43 +4,14 @@ import copy
 from collections import namedtuple, deque
 
 from model import Actor, Critic
+from setting import Settings
 
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
 
 
-# Replay buffer size
-BUFFER_SIZE = int(1e5)
-# Minibatch size
-BATCH_SIZE = 256
-# Discount Factor
-GAMMA = 0.99
-# Soft update parameter
-TAU = 1e-3
-# Actor learning rate
-LR_ACTOR = 1e-3
-# Critic learning rate
-LR_CRITIC = 1e-3
-# L2 weight decay
-WEIGHT_DECAY = 0
-# Number of time steps before each update
-UPDATE_EVERY = 2
-# Number of updates in each update
-NUM_UPDATE = 4
-# Epsilon for the noise process added to the actions
-EPSILON = 1
-# Epsilon decay rate
-EPSILON_DECAY = 1e-6
-# Number of nodes in Actor network
-ACTOR_FC1 = 256
-ACTOR_FC2 = 256
-# Number of nodes in Critic network
-CRITIC_FC1 = 256
-CRITIC_FC2 = 256
-
-
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+config = Settings()
 
 
 class DDPGAgent():
@@ -58,26 +29,26 @@ class DDPGAgent():
         self.action_size = action_size
         self.n_agents = n_agents
         self.seed = random.seed(seed)
-        self.epsilon = EPSILON
+        self.epsilon = config.epsilon
         
         # Time step number
         self.time_step = 0
         
         # Set up the Actor networks
-        self.actor_local = Actor(state_size, action_size, seed, fc1_units=ACTOR_FC1, fc2_units=ACTOR_FC2).to(device)
-        self.actor_target = Actor(state_size, action_size, seed, fc1_units=ACTOR_FC1, fc2_units=ACTOR_FC2).to(device)
-        self.actor_optimizer = optim.Adam(self.actor_local.parameters(), lr=LR_ACTOR)
+        self.actor_local = Actor(state_size, action_size, seed, fc1_units=config.actor_fc1, fc2_units=config.actor_fc2).to(device)
+        self.actor_target = Actor(state_size, action_size, seed, fc1_units=config.actor_fc1, fc2_units=config.actor_fc2).to(device)
+        self.actor_optimizer = optim.Adam(self.actor_local.parameters(), lr=config.lr_actor)
 
         # Set up the Critic networks
-        self.critic_local = Critic(state_size, action_size, seed, fc1_units=CRITIC_FC1, fc2_units=CRITIC_FC2).to(device)
-        self.critic_target = Critic(state_size, action_size, seed, fc1_units=CRITIC_FC1, fc2_units=CRITIC_FC2).to(device)
-        self.critic_optimizer = optim.Adam(self.critic_local.parameters(), lr=LR_CRITIC, weight_decay=WEIGHT_DECAY)
+        self.critic_local = Critic(state_size, action_size, seed, fc1_units=config.critic_fc1, fc2_units=config.critic_fc2).to(device)
+        self.critic_target = Critic(state_size, action_size, seed, fc1_units=config.critic_fc1, fc2_units=config.critic_fc2).to(device)
+        self.critic_optimizer = optim.Adam(self.critic_local.parameters(), lr=config.lr_critic, weight_decay=config.weight_decay)
     
         # Noise process for exploratary action
         self.noise = OUNoise((n_agents, action_size), seed)
     
         # Set replay memory
-        self.memory = ReplayBuffer(action_size, BUFFER_SIZE, BATCH_SIZE, seed)
+        self.memory = ReplayBuffer(action_size, config.buffer_size, config.batch_size, seed)
         
         # Copy over the weights
         self.hard_copy(self.actor_local, self.actor_target)
@@ -92,10 +63,10 @@ class DDPGAgent():
         self.time_step += 1
         
         # If enough samples are availble in the buffer to sample, Learn
-        if len(self.memory) > BATCH_SIZE and self.time_step % UPDATE_EVERY == 0:
-            for i in range(NUM_UPDATE):
+        if len(self.memory) > config.batch_size and self.time_step % config.update_every == 0:
+            for i in range(config.num_update):
                 experiences = self.memory.sample()
-                self.learn(experiences, GAMMA)
+                self.learn(experiences, config.gamma)
             
     def act(self, state, add_noise=True):
         """Returns actions for given state as per current policy."""
@@ -156,13 +127,13 @@ class DDPGAgent():
         self.actor_optimizer.step()
         
         # Update target networks
-        self.soft_update(self.critic_local, self.critic_target, TAU)
-        self.soft_update(self.actor_local, self.actor_target, TAU)
+        self.soft_update(self.critic_local, self.critic_target, config.tau)
+        self.soft_update(self.actor_local, self.actor_target, config.tau)
         
         # Reset noise                               
         self.reset()
         # Decay epsilon
-        self.epsilon -= EPSILON_DECAY             
+        self.epsilon -= config.epsilon_decay             
         
     def soft_update(self, local_model, target_model, tau):
         """Soft update model parameters.
@@ -182,9 +153,9 @@ class DDPGAgent():
             
     def save(self):
         torch.save(self.actor_local.state_dict(), 
-                   str(ACTOR_FC1)+'_'+str(ACTOR_FC2) + '_actor.pth')
+                   str(config_actor_fc1)+'_'+str(config_actor_fc2) + '_actor.pth')
         torch.save(self.critic_local.state_dict(),
-                   str(CRITIC_FC1)+'_'+str(CRITIC_FC2) + '_critic.pth')
+                   str(config.critic_fc1)+'_'+str(config.critic_fc2) + '_critic.pth')
     
     def load(self, actor_file, critic_file):
         self.actor_local.load_state_dict(torch.load(actor_file))
