@@ -1,3 +1,6 @@
+import torch
+
+
 # Replay buffer size
 BUFFER_SIZE = int(1e5)
 # Minibatch size
@@ -31,7 +34,7 @@ CRITIC_FC2 = 256
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-class Settings():
+class Configuration():
     """A class to save the hyperparameters and configs."""
     
     def __init__(self):
