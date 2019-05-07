@@ -100,7 +100,7 @@ class MADDPGAgent():
 class OUNoise():
     """Ornstein-Uhlenbeck noise process."""
     
-    def __init__(self, size, seed, mu=0.0, theta=0.15, sigma=1):
+    def __init__(self, size, seed, mu=0.0, theta=0.15, sigma=2):
         """Initialize parameters and nose process."""
         self.size = size
         self.mu = mu * np.ones(size)

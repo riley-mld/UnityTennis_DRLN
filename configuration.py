@@ -4,7 +4,7 @@ import torch
 # Replay buffer size
 BUFFER_SIZE = int(1e5)
 # Minibatch size
-BATCH_SIZE = 256
+BATCH_SIZE = 512
 # Discount Factor
 GAMMA = 0.99
 # Soft update parameter
@@ -24,11 +24,11 @@ EPSILON = 1
 # Epsilon decay rate
 EPSILON_DECAY = 1e-6
 # Number of nodes in Actor network
-ACTOR_FC1 = 256
-ACTOR_FC2 = 256
+ACTOR_FC1 = 512
+ACTOR_FC2 = 512
 # Number of nodes in Critic network
-CRITIC_FC1 = 256
-CRITIC_FC2 = 256
+CRITIC_FC1 = 512
+CRITIC_FC2 = 512
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

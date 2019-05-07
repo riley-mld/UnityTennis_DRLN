@@ -36,7 +36,7 @@ class Actor(nn.Module):
         self.fc3 = nn.Linear(fc2_units, action_size)
         
         # Reset the weights
-        #self.reset_parameters()
+        self.reset_parameters()
         
     def reset_parameters(self):
         """Reset the weights"""
@@ -79,7 +79,7 @@ class Critic(nn.Module):
         self.fc3 = nn.Linear(fc2_units, 1)
         
         # Reset the weights
-        #self.reset_parameters()
+        self.reset_parameters()
         
     def reset_parameters(self):
         """Reset the weights"""
