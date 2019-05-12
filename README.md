@@ -1,14 +1,12 @@
 
-[//]: # (Image References)
-
-[image1]: https://user-images.githubusercontent.com/10624937/42135623-e770e354-7d12-11e8-998d-29fc74429ca2.gif "Trained Agent"
-
 
 # Deep Reinforcement Learning Agent to Solve Unity Tennis
 
 This project was done as part of the [Udacity Deep Reinforcement Learning Nanodegree](https://eu.udacity.com/course/deep-reinforcement-learning-nanodegree--nd893). MIDDPG (Multi Agent Deep Deterministic Policy Gradient) algorithm was used in this project to teach 2 agents to play tennis by playing with each other in a Unity environment. For this project, I used the [Tennis](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#tennis) environment.
 
-![Trained Agent][image1]
+![](Assets/TrainedAgents.gif)
+
+To watch a video of the trained agent [click here](https://vimeo.com/335736691)
 
 ## Introduction
 
@@ -44,3 +42,4 @@ The task is episodic, and in order to solve the environment, your agents must ge
 - This yields a single **score** for each episode.
 
 The environment is considered solved, when the average (over 100 episodes) of those **scores** is at least +0.5.
+
