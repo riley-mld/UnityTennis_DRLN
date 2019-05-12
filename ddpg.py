@@ -65,47 +65,23 @@ class DDPGAgent():
         """
         states, actions, rewards, next_states, dones = experiences
         
-        """
-        # Update Critic
-        # Get predicted next-state actions and Q values from target models.
-        actions_next = self.actor_target(next_states)
-        Q_targets_next = self.critic_target(next_states, actions_next)
-        # Compute Q targets for current states
-        Q_targets = rewards + (gamma * Q_targets_next * (1 - dones))
-        # Compute loss
-        Q_expected = self.critic_local(states, actions)
-        critic_loss = F.mse_loss(Q_expected, Q_targets)
-        # Minimise the loss with gradient descent
-        self.critic_optimizer.zero_grad()
-        critic_loss.backward()
-        torch.nn.utils.clip_grad_norm_(self.critic_local.parameters(), 1)
-        self.critic_optimizer.step()
-        
-        # Update Actor
-        # Compute Actor loss
-        actions_pred = self.actor_local(states)
-        actor_loss = -self.critic_local(states, actions_pred).mean()
-        # Minimize the loss with gradient descent
-        self.actor_optimizer.zero_grad()
-        actor_loss.backward()
-        self.actor_optimizer.step()
-        """
+        # Reset the gradients
         self.critic_optimizer.zero_grad()
 
         index = torch.tensor([index]).to(self.config.device)
         actions_next = torch.cat(all_next_actions, dim=1).to(self.config.device)
         with torch.no_grad():
             q_next = self.critic_target(torch.cat((next_states, actions_next), dim=1))
-        q_exp = self.critic_local(torch.cat((states, actions), dim=1))
+        q_expected = self.critic_local(torch.cat((states, actions), dim=1))
         q_t = rewards.index_select(1, index) + (gamma * q_next * (1 - dones.index_select(1, index)))
-        F.mse_loss(q_exp, q_t.detach()).backward()
+        F.mse_loss(q_expected, q_t.detach()).backward()
         self.critic_optimizer.step()
 
         self.actor_optimizer.zero_grad()
 
-        actions_pred = [actions if i == self.index else actions.detach() for i, actions in enumerate(all_actions)]
-        actions_pred = torch.cat(actions_pred, dim=1).to(self.config.device)
-        actor_loss = -self.critic_local(torch.cat((states, actions_pred), dim=1)).mean()
+        actions_predicted = [actions if i == self.index else actions.detach() for i, actions in enumerate(all_actions)]
+        actions_predicted = torch.cat(actions_predicted, dim=1).to(self.config.device)
+        actor_loss = -self.critic_local(torch.cat((states, actions_predicted), dim=1)).mean()
         actor_loss.backward()
 
         self.actor_optimizer.step()

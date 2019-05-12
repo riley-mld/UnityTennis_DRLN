@@ -27,6 +27,7 @@ class Actor(nn.Module):
         super(Actor, self).__init__()
         
         self.seed = torch.manual_seed(seed)
+        
         # Model architecture
         self.bn0 = nn.BatchNorm1d(state_size)
         self.fc1 = nn.Linear(state_size, fc1_units)
@@ -46,11 +47,6 @@ class Actor(nn.Module):
         
     def forward(self, state):
         """Forward pass, this function outputs the action chosen by model."""
-        """
-        x = self.bn0(state)
-        x = F.relu(self.bn1(self.fc1(x)))
-        x = F.relu(self.bn2(self.fc2(x)))      
-        """
         x = F.relu(self.fc1(state))
         x = F.relu(self.fc2(x))
         return F.tanh(self.fc3(x))
@@ -72,6 +68,7 @@ class Critic(nn.Module):
         super(Critic, self).__init__()
         
         self.seed = torch.manual_seed(seed)
+        
         # Model architecture
         self.bn0 = nn.BatchNorm1d(state_size)
         self.fc1 = nn.Linear((state_size  + action_size) * 2, fc1_units)
@@ -89,14 +86,6 @@ class Critic(nn.Module):
         
     def forward(self, state):
         """Forward pass, this function outputs the Q value of chosen action."""
-        """
-        state = self.bn0(state)
         xs = F.relu(self.fc1(state))
-        x = torch.cat((xs, action), dim=1)
-        x = F.relu(self.fc2(x))
-        """
-        
-        xs = F.relu(self.fc1(state))
-        #x = torch.cat((xs, action), dim=1)
         x = F.relu(self.fc2(xs))
         return self.fc3(x)

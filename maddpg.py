@@ -39,14 +39,8 @@ class MADDPGAgent():
         
         states = states.reshape(1, -1) 
         next_states = next_states.reshape(1, -1)
-        #actions = actions.reshape(1, -1)
-        #rewards = rewards.reshape(1, -1)
-        #dones = dones.reshape(1, -1)
+        self.memory.add(states, actions, rewards, next_states, dones)
         
-        #for i in range(self.n_agents):
-            #self.memory.add(states[i,:], actions[i,:], rewards[i], next_states[i,:], dones[i])
-
-        self.memory.add(states, actions, rewards, next_states, dones)    
         # Update time step
         self.time_step += 1
         
@@ -59,7 +53,7 @@ class MADDPGAgent():
                 
                 
     def learn(self, experiences, gamma):
-        """LEARN!!"""
+        """Call the learn function for each of the agents in the enviroment."""
         actions = []
         next_actions = []
         for i, agent in enumerate(self.agents):
@@ -69,7 +63,6 @@ class MADDPGAgent():
             next_state = next_states.reshape(-1, 2, 24).index_select(1, agent_id).squeeze(1)
             actions.append(agent.actor_local(state))
             next_actions.append(agent.actor_target(next_state))
-            #agent.learn(experiences[i], gamma)
             
             # Reset noise
         for i, agent in enumerate(self.agents):
@@ -80,7 +73,7 @@ class MADDPGAgent():
         self.epsilon -= self.config.epsilon_decay       
                 
     def act(self, states, add_noise=True):
-        """Act!!!!"""
+        """Loop through all agents and get an action based on their policy."""
         actions = []
         
         for agent, state in zip(self.agents, states):
@@ -88,7 +81,6 @@ class MADDPGAgent():
             
             if add_noise:
                 action += self.epsilon * self.noise.sample()
-                #self.reset()
             
             action = np.clip(action, -1, 1)
             
@@ -100,12 +92,12 @@ class MADDPGAgent():
         self.noise.reset()
         
     def save(self):
-        """SAVE!!!"""
+        """Save the trained agent's weights."""
         for agent in self.agents:
             agent.save()
             
     def load(self):
-        """LOAD!!!"""
+        """Load the trained weights."""
         for i, agent in enumerate(self.agents):
             agent.load(str(self.config.actor_fc1)+'_'+str(self.config.actor_fc2) + '_' + str(i)  + '_actor.pth', str(self.config.critic_fc1)+'_'+str(self.config.critic_fc2) + '_'  + str(i) + '_critic.pth')
          
