@@ -1,5 +1,6 @@
 
 
+
 # Deep Reinforcement Learning Agent to Solve Unity Tennis
 
 This project was done as part of the [Udacity Deep Reinforcement Learning Nanodegree](https://eu.udacity.com/course/deep-reinforcement-learning-nanodegree--nd893). MIDDPG (Multi Agent Deep Deterministic Policy Gradient) algorithm was used in this project to teach 2 agents to play tennis by playing with each other in a Unity environment. For this project, I used the [Tennis](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#tennis) environment.
@@ -28,6 +29,8 @@ The observation space consists of 8 variables corresponding to the position and 
     (_For AWS_) If you'd like to train the agent on AWS (and have not [enabled a virtual screen](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Training-on-Amazon-Web-Service.md)), then please use [this link](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P3/Tennis/Tennis_Linux_NoVis.zip) to obtain the "headless" version of the environment.  You will **not** be able to watch the agent without enabling a virtual screen, but you will be able to train the agent.  (_To watch the agent, you should follow the instructions to [enable a virtual screen](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Training-on-Amazon-Web-Service.md), and then download the environment for the **Linux** operating system above._)
 
 2. Place the file in the GitHub repository folder, and unzip (or decompress) the file and set the path in the notebook file. 
+
+3. Open the `Tennis.ipynb` notebook and run all the cells if you want to train the agents but skip the training cell if you want to test the trained agents. (The cells should be labeled clearly)
 
 
 ### Dependencies
