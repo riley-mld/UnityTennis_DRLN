@@ -16,7 +16,7 @@ In this environment, two agents control rackets to bounce a ball over a net. If 
 The observation space consists of 8 variables corresponding to the position and velocity of the ball and racket. Each agent receives its own, local observation.  Two continuous actions are available, corresponding to movement toward (or away from) the net and jumping. 
 
 
-## Getting Started
+## Getting Started and Running the Code
 
 1. Download the environment from one of the links below.  You need only select the environment that matches your operating system:
     - Linux: [click here](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P3/Tennis/Tennis_Linux.zip)
