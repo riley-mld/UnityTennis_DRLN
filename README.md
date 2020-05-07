@@ -3,7 +3,7 @@
 
 # Deep Reinforcement Learning Agent to Solve Unity Tennis
 
-This project was done as part of the [Udacity Deep Reinforcement Learning Nanodegree](https://eu.udacity.com/course/deep-reinforcement-learning-nanodegree--nd893). MIDDPG (Multi Agent Deep Deterministic Policy Gradient) algorithm was used in this project to teach 2 agents to play tennis by playing with each other in a Unity environment. For this project, I used the [Tennis](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#tennis) environment.
+This project was done as part of the [Udacity Deep Reinforcement Learning Nanodegree](https://eu.udacity.com/course/deep-reinforcement-learning-nanodegree--nd893). MADDPG (Multi Agent Deep Deterministic Policy Gradient) algorithm was used in this project to teach 2 agents to play tennis by playing with each other in a Unity environment. For this project, I used the [Tennis](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Learning-Environment-Examples.md#tennis) environment.
 
 ![](Assets/TrainedAgents.gif)
 
